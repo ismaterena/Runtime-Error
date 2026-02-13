@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <windows.h>
 
+//checking
+
 int screenWidth = 800;
 int screenHeight = 600;
 
