@@ -1,11 +1,12 @@
 #include "iGraphics.h"
 #include "bitmap_loader.h"
 #include <stdlib.h>
-
+#include <windows.h>
 
 int screenWidth = 800;
 int screenHeight = 600;
 
+int timerCount = 0;
 
 int scene = 1;
 int introStep = 0;
@@ -34,101 +35,273 @@ void drawPNG(int x, int y, int w, int h, int imgID) {
 	glDisable(GL_BLEND);
 }
 
-// Scene 1 eikhan theke start
+// Scene 1 eikhan theke start, this part is done FINALLY. DO NOT TOUCH THIS PART GUYS.
+
 void drawScene1()
 {
 	iShowBMP(0, 0, scene1_bg);
 
-	// Dialogue er jonno background box 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glColor4f(1.0, 1.0, 1.0, 0.75); // Semi-transparent White eikhane 
-	iFilledRectangle(40, screenHeight - 200, 720, 150);
-	glDisable(GL_BLEND);
-
 	int charHeight = screenHeight / 2;
 	int charWidth = charHeight * 0.66;
 
-	// character er positioning
+	// Drawing Characters here
 	drawPNG(100, 0, charWidth, charHeight, oritri_talk_img);
 	drawPNG(300, 0, charWidth, charHeight, afif_talk_img);
 	drawPNG(500, 0, charWidth, charHeight, samiha_talk_img);
 
-	iSetColor(0, 0, 0);
-	iText(60, screenHeight - 100, "Oritri: This university has WiFi, but no coffee!", GLUT_BITMAP_HELVETICA_18);
-	iText(60, screenHeight - 130, "Afif: Attendance is optional, stress is mandatory.", GLUT_BITMAP_HELVETICA_18);
-	iText(60, screenHeight - 160, "Samiha: I survived 3 assignments in one night.", GLUT_BITMAP_HELVETICA_18);
+	
+	int boxY = 320;
+	int boxW = 180;
+	int boxH = 100; 
 
-	iSetColor(255, 255, 255);
-	iText(50, 20, "Press ENTER to continue...", GLUT_BITMAP_HELVETICA_12);
+	iSetColor(0, 0, 0);
+	iText(700, 20, "Press SHIFT to continue ...", GLUT_BITMAP_HELVETICA_12);
+
+	// Oritri 1
+	if (timerCount >= 0 && timerCount < 3) {
+		iSetColor(0, 0, 0); iFilledRectangle(100, boxY, boxW, boxH);
+		iSetColor(255, 255, 255);
+		iText(110, boxY + 75, "Oritri: Hello! Congrats!", GLUT_BITMAP_9_BY_15);
+		iText(110, boxY + 55, "You're now part of the species", GLUT_BITMAP_9_BY_15);
+		iText(110, boxY + 35, "that survives on caffeine,", GLUT_BITMAP_9_BY_15);
+		iText(110, boxY + 15, "code, and last minute panic.", GLUT_BITMAP_9_BY_15);
+	}
+
+	// Afif 1
+	else if (timerCount >= 3 && timerCount < 6) {
+		iSetColor(0, 0, 0); iFilledRectangle(300, boxY, boxW, boxH);
+		iSetColor(255, 255, 255);
+		iText(310, boxY + 75, "Afif: Enjoy the fresh air", GLUT_BITMAP_9_BY_15);
+		iText(310, boxY + 55, "while it lasts. Soon, the", GLUT_BITMAP_9_BY_15);
+		iText(310, boxY + 35, "only breeze is your laptop", GLUT_BITMAP_9_BY_15);
+		iText(310, boxY + 15, "fan overheating.", GLUT_BITMAP_9_BY_15);
+	}
+
+	// Samiha 1
+	else if (timerCount >= 6 && timerCount < 9) {
+		iSetColor(0, 0, 0); iFilledRectangle(540, boxY, boxW, boxH);
+		iSetColor(255, 255, 255);
+		iText(550, boxY + 75, "Samiha: Don't worry. Soon", GLUT_BITMAP_9_BY_15);
+		iText(550, boxY + 55, "you'll be a coding wizard", GLUT_BITMAP_9_BY_15);
+		iText(550, boxY + 35, "or an expert at Googling", GLUT_BITMAP_9_BY_15);
+		iText(550, boxY + 15, "Stack Overflow.", GLUT_BITMAP_9_BY_15);
+	}
+
+	// Oritri 2
+	else if (timerCount >= 9 && timerCount < 12) {
+		iSetColor(0, 0, 0); iFilledRectangle(100, boxY, boxW, boxH);
+		iSetColor(255, 255, 255);
+		iText(110, boxY + 75, "Oritri: Welcome to AUST!", GLUT_BITMAP_9_BY_15);
+		iText(110, boxY + 55, "Where you enter as a human", GLUT_BITMAP_9_BY_15);
+		iText(110, boxY + 35, "and leave as someone who", GLUT_BITMAP_9_BY_15);
+		iText(110, boxY + 15, "loves semicolons.", GLUT_BITMAP_9_BY_15);
+	}
+
+	// Afif 2
+	else if (timerCount >= 12 && timerCount < 15) {
+		iSetColor(0, 0, 0); iFilledRectangle(300, boxY, boxW, boxH);
+		iSetColor(255, 255, 255);
+		iText(310, boxY + 75, "Afif: Remember, when your", GLUT_BITMAP_9_BY_15);
+		iText(310, boxY + 55, "code errors at 2 AM,", GLUT_BITMAP_9_BY_15);
+		iText(310, boxY + 35, "it's not personal.", GLUT_BITMAP_9_BY_15);
+		iText(310, boxY + 15, "It's just CSE.", GLUT_BITMAP_9_BY_15);
+	}
+
+	// Samiha 2
+	else if (timerCount >= 15) {
+		iSetColor(0, 0, 0); iFilledRectangle(540, boxY, boxW, boxH);
+		iSetColor(255, 255, 255);
+		iText(550, boxY + 75, "Samiha: Welcome to CSE!", GLUT_BITMAP_9_BY_15);
+		iText(550, boxY + 55, "Where 'Hello World' is", GLUT_BITMAP_9_BY_15);
+		iText(550, boxY + 35, "the last easy thing", GLUT_BITMAP_9_BY_15);
+		iText(550, boxY + 15, "you'll ever write.", GLUT_BITMAP_9_BY_15);
+	}
+
+	
 }
 
-// scene 2 eikhan theke start
+
+// scene 2 eikhan theke start, space key is working. scene 2 is done. do not touch this part either.
 void drawScene2()
 {
 	iShowBMP(0, 0, scene2_bg);
 
-	int smallHeight = screenHeight / 4;
-	int smallWidth = smallHeight * 0.66;
+	int midHeight = screenHeight /1.75;
+	int midWidth = midHeight * 0.66;
 
+	int bigHeight = screenHeight ;
+	int bigWidth = midHeight * 0.66;
+
+
+	int centerY = 0;
+	int centerX1 = 100;
+	int centerX2 = 300;
+	int centerX3 = 500;
+
+	int boxW = 400;
+	int boxH = 60;
+
+
+	
 	if (introStep == 0)
 	{
-		drawPNG(150, 50, smallWidth, smallHeight, oritri_scene_img);
-		drawPNG(350, 50, smallWidth, smallHeight, afif_scene_img);
-		drawPNG(550, 50, smallWidth, smallHeight, samiha_scene_img);
+		drawPNG(centerX1, centerY, midWidth, midHeight, oritri_scene_img);
+		drawPNG(centerX2, centerY, midWidth, midHeight, afif_scene_img);
+		drawPNG(centerX3, centerY, midWidth, midHeight, samiha_scene_img);
 
+		iSetColor(0, 0, 0);
+		iFilledRectangle(200, 480, boxW, boxH);
 		iSetColor(255, 255, 255);
-		iText(50, screenHeight - 50, "Characters ready. Press ENTER.", GLUT_BITMAP_HELVETICA_12);
+		iText(220, 505, "welcome to Aust! Let's know us as individuals", GLUT_BITMAP_HELVETICA_18);
+		iSetColor(0, 0, 0);
+		iText(700, 20, "Press SHIFT to continue ...", GLUT_BITMAP_HELVETICA_12);
 	}
-	else if (introStep >= 1 && introStep <= 3)
+
+	
+	else if (introStep == 1)
 	{
-		// this one here is the Bio Box for intro
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glColor4f(0.0, 0.0, 0.0, 0.6);
-		iFilledRectangle(380, 270, 400, 80);
-		glDisable(GL_BLEND);
+		drawPNG(150, centerY, midWidth, bigHeight, oritri_scene_img);
 
-		double zoomFactor = (screenHeight / 3.0) / 300.0;
-		int drawWidth = 300 * zoomFactor;
-		int drawHeight = 450 * zoomFactor;
-
-		if (introStep == 1) drawPNG(50, 100, drawWidth, drawHeight, oritri_scene_img);
-		if (introStep == 2) drawPNG(50, 100, drawWidth, drawHeight, afif_scene_img);
-		if (introStep == 3) drawPNG(50, 100, drawWidth, drawHeight, samiha_scene_img);
-
+		iSetColor(0, 0, 0);
+		iFilledRectangle(350, 250, boxW, boxH);
 		iSetColor(255, 255, 255);
-		if (introStep == 1) iText(400, 310, oritri_text, GLUT_BITMAP_HELVETICA_18);
-		if (introStep == 2) iText(400, 310, afif_text, GLUT_BITMAP_HELVETICA_18);
-		if (introStep == 3) iText(400, 310, samiha_text, GLUT_BITMAP_HELVETICA_18);
+		iText(360, 285, "Oritri: Runs on panic, caffeine, and last minute confidence. Believes every bug can be fixed ", GLUT_BITMAP_HELVETICA_18);
+		iText(360, 270, "if you stare at it long enough. Special ability: staying calm while internally screaming. ", GLUT_BITMAP_HELVETICA_18);
+		iSetColor(0, 0, 0);
+		iText(700, 20, "Press SHIFT to continue...", GLUT_BITMAP_HELVETICA_12);
 
-		iText(50, 50, "Press ENTER to continue...", GLUT_BITMAP_HELVETICA_12);
+	}
+
+	
+	else if (introStep == 2)
+	{
+		drawPNG(150, -50, midWidth, bigHeight, afif_scene_img);
+
+		iSetColor(0, 0, 0);
+		iFilledRectangle(350, 250, boxW, boxH);
+		iSetColor(255, 255, 255);
+		iText(360, 285, "Afif: Professional procrastinator turned emergency performer. Debugs best under extreme", GLUT_BITMAP_HELVETICA_18);
+		iText(360, 270, "emotional pressure. Secret talent : convincing himself “there’s still time. ", GLUT_BITMAP_HELVETICA_18);
+		iSetColor(0, 0, 0);
+		iText(700, 20, "Press SHIFT to continue...", GLUT_BITMAP_HELVETICA_12);
+	}
+
+	
+	else if (introStep == 3)
+	{
+		drawPNG(150, -50, midWidth, bigHeight, samiha_scene_img);
+
+		iSetColor(0, 0, 0);
+		iFilledRectangle(350, 250, boxW, boxH);
+		iSetColor(255, 255, 255);
+		iText(360, 290, "Samiha: Organized to the point where even her backup files have backup files. Finds", GLUT_BITMAP_HELVETICA_18);
+		iText(360, 275, "mistakes faster than teachers find surprise quizzes. Weakness: gets emotionally ", GLUT_BITMAP_HELVETICA_18);
+		iText(360, 260, "offended by messy variable names.", GLUT_BITMAP_HELVETICA_18);
+		iSetColor(0, 0, 0);
+		iText(700, 20, "Press SHIFT to continue...", GLUT_BITMAP_HELVETICA_12);
+	}
+
+	
+	else if (introStep == 4)
+	{
+		drawPNG(centerX1, centerY, midWidth, bigHeight, oritri_scene_img);
+		drawPNG(centerX2, centerY, midWidth, bigHeight, afif_scene_img);
+		drawPNG(centerX3, centerY, midWidth, bigHeight, samiha_scene_img);
+
+		iSetColor(0, 0, 0);
+		iFilledRectangle(340, 0, 200, 20);
+		iSetColor(255, 255, 255);
+		iText(395, 5, "Choose a Character", GLUT_BITMAP_HELVETICA_18);
+		iSetColor(0, 0, 0);
+		iText(700, 20, "Press SHIFT to continue ", GLUT_BITMAP_HELVETICA_12);
 	}
 }
+
+
+
+void drawScene3()
+{
+	iSetColor(255, 255, 255);
+	iText(300, 300, "Scene 3 Started!", GLUT_BITMAP_HELVETICA_18);
+}
+
+
 
 void iDraw() {
 	iClear();
-	if (scene == 1) drawScene1();
-	else if (scene == 2) drawScene2();
+
+	if (scene == 1)
+		drawScene1();
+	else if (scene == 2)
+		drawScene2();
+	else if (scene == 3)
+		drawScene3();
 }
 
-void iKeyboard(unsigned char key) {
-	if (key == '\r') {
-		if (scene == 1) { scene = 2; introStep = 0; }
-		else if (scene == 2 && introStep < 3) introStep++;
-	}
-	if (key == 'q') exit(0);
-}
+
+
+
+
 
 void iMouseMove(int mx, int my) {}
 void iMouse(int button, int state, int mx, int my) {}
 void iSpecialKeyboard(unsigned char key) {}
 void iPassiveMouseMove(int mx, int my) {}
-void fixedUpdate() {}
+
+
+void fixedUpdate()
+{
+	static int spacePressed = 0;
+
+
+	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+	{
+		if (!spacePressed) // machine gun skipping jate na hoy oitar logic disi
+		{
+			spacePressed = 1;
+
+			//      SCENE 1 
+			if (scene == 1)
+			{
+				// Ei logic e If you press Space, scene 2 te chole jabe, Regardless of whether the timer finished or not. scene 1 skip korte chaile user space click korte parbe
+				scene = 2;
+				introStep = 0;
+				timerCount = 16; // Sync timer jate dialouge gula cholte thake
+			}
+
+			// SCENE 2
+			else if (scene == 2)
+			{
+				introStep++;
+
+				if (introStep > 4)
+				{
+					scene = 3;
+				}
+			}
+		}
+	}
+	else
+	{
+		spacePressed = 0; //eita Reset korbe when key is released
+	}
+}
+
+
+
+
+
+void changeTimer()
+{
+	timerCount++;
+}
+
 
 int main() {
 	
 	iInitialize(screenWidth, screenHeight, "Runtime Error");
+	iSetTimer(1000, changeTimer);
+	iSetTimer(10, fixedUpdate);
 
 	
 	oritri_talk_img = iLoadImage("talkingori.png");
