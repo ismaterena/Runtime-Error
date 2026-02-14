@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <windows.h>
 
-//checking
 
 int screenWidth = 800;
 int screenHeight = 600;
@@ -17,14 +16,27 @@ int introStep = 0;
 char *scene1_bg = "entrancefinal.bmp";
 char *scene2_bg = "passage2final.bmp";
 
+char *scene3_bg = "frontidfinal.bmp";
+
 
 int oritri_talk_img, afif_talk_img, samiha_talk_img;
 int oritri_scene_img, afif_scene_img, samiha_scene_img;
 
 
 char *oritri_text = "Oritri: Loves sarcasm, coffee, and avoiding lectures.";
-char *afif_text = "Afif: Meme king, always late, yet top of class.";
+char *afif_text = "Afif: always late, yet top of class.";
 char *samiha_text = "Samiha: Smart, sarcastic, and always rolling eyes.";
+
+
+ 
+int oriID, afifID, samID;     
+
+
+
+int selectedCharacterID = -1; 
+int currentSelection = 0;    
+
+
 
 
 void drawPNG(int x, int y, int w, int h, int imgID) {
@@ -124,6 +136,7 @@ void drawScene1()
 
 
 // scene 2 eikhan theke start, space key is working. scene 2 is done. do not touch this part either.
+
 void drawScene2()
 {
 	iShowBMP(0, 0, scene2_bg);
@@ -211,33 +224,102 @@ void drawScene2()
 		drawPNG(centerX3, centerY, midWidth, bigHeight, samiha_scene_img);
 
 		iSetColor(0, 0, 0);
-		iFilledRectangle(340, 0, 200, 20);
+		iFilledRectangle(260, 0, 350, 20);
 		iSetColor(255, 255, 255);
-		iText(395, 5, "Choose a Character", GLUT_BITMAP_HELVETICA_18);
+		iText(270, 5, "Oritri: Before the semester chooses violence,  you must choose a character ", GLUT_BITMAP_HELVETICA_18);
 		iSetColor(0, 0, 0);
 		iText(700, 20, "Press SHIFT to continue ", GLUT_BITMAP_HELVETICA_12);
 	}
 }
 
 
-
 void drawScene3()
 {
+	iShowBMP(0, 0, scene3_bg); // background
+
+	int charWidth = 160;
+	int charHeight = 270;
+	int yPos = 140;
+
+	int x[3] = { 100, 325, 550 };
+
+	// Draw characters
+	drawPNG(x[0], yPos, charWidth, charHeight, oriID);
+	drawPNG(x[1], yPos, charWidth, charHeight, afifID);
+	drawPNG(x[2], yPos, charWidth, charHeight, samID);
+
+	//  selection rectangle draw eikhane
+	if (selectedCharacterID == -1)
+	{
+		iSetColor(0, 255, 0);
+		iRectangle(x[currentSelection], yPos, charWidth, charHeight);
+	}
+
+
+	iSetColor(0, 0, 0);
+	iFilledRectangle(200, 520, 400, 40);
 	iSetColor(255, 255, 255);
-	iText(300, 300, "Scene 3 Started!", GLUT_BITMAP_HELVETICA_18);
+	iText(260, 535, "Use LEFT/RIGHT to select, Shift to confirm", GLUT_BITMAP_HELVETICA_18);
 }
+
+
+
+void drawScene4() {
+	
+	iShowBMP(0, 0, scene3_bg);
+
+	int displayImg;
+	char* nameText;
+
+	// the correct image based user er click e
+	if (selectedCharacterID == 0) {
+		displayImg = oriID;
+		nameText = "ORITRI SELECTED";
+	}
+	else if (selectedCharacterID == 1) {
+		displayImg = afifID;
+		nameText = "AFIF SELECTED";
+	}
+	else {
+		displayImg = samID;
+		nameText = "SAMIHA SELECTED";
+	}
+
+	
+	drawPNG(300, 150, 200, 350, displayImg);
+
+	iSetColor(0, 0, 0);
+	iFilledRectangle(250, 520, 300, 40);
+	iSetColor(255, 255, 255);
+	iText(310, 535, nameText, GLUT_BITMAP_HELVETICA_18);
+
+	iSetColor(0, 0, 0);
+	iText(340, 100, "Press Space to start the game", GLUT_BITMAP_HELVETICA_18);
+}
+
+
+
+
 
 
 
 void iDraw() {
 	iClear();
+	if (scene == 1) drawScene1();
+	else if (scene == 2) drawScene2();
+	else if (scene == 3) drawScene3();
+	else if (scene == 4) drawScene4();
+}
 
-	if (scene == 1)
-		drawScene1();
-	else if (scene == 2)
-		drawScene2();
-	else if (scene == 3)
-		drawScene3();
+
+void iMouse(int button, int state, int mx, int my)
+{
+}
+
+void iMouseMove(int mx, int my) {}
+void iPassiveMouseMove(int mx, int my) {}
+
+void iSpecialKeyboard(unsigned char key) {
 }
 
 
@@ -245,37 +327,32 @@ void iDraw() {
 
 
 
-void iMouseMove(int mx, int my) {}
-void iMouse(int button, int state, int mx, int my) {}
-void iSpecialKeyboard(unsigned char key) {}
-void iPassiveMouseMove(int mx, int my) {}
 
 
 void fixedUpdate()
 {
 	static int spacePressed = 0;
+	static int leftPressed = 0;
+	static int rightPressed = 0;
+	static int shiftPressed = 0;
 
+	// SPACE KEY use kora Scene 1 & 2 te only
 
 	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
 	{
-		if (!spacePressed) // machine gun skipping jate na hoy oitar logic disi
+		if (!spacePressed)
 		{
 			spacePressed = 1;
 
-			//      SCENE 1 
 			if (scene == 1)
 			{
-				// Ei logic e If you press Space, scene 2 te chole jabe, Regardless of whether the timer finished or not. scene 1 skip korte chaile user space click korte parbe
 				scene = 2;
 				introStep = 0;
-				timerCount = 16; // Sync timer jate dialouge gula cholte thake
+				timerCount = 16;
 			}
-
-			// SCENE 2
 			else if (scene == 2)
 			{
 				introStep++;
-
 				if (introStep > 4)
 				{
 					scene = 3;
@@ -285,8 +362,63 @@ void fixedUpdate()
 	}
 	else
 	{
-		spacePressed = 0; //eita Reset korbe when key is released
+		spacePressed = 0;
 	}
+
+	// SCENE 3 er control logic eikhane
+	if (scene == 3)
+	{
+		// LEFT arrow er jonno
+		if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+		{
+			if (!leftPressed)
+			{
+				leftPressed = 1;
+				currentSelection--;
+
+				if (currentSelection < 0)
+					currentSelection = 2;   
+			}
+		}
+		else
+		{
+			leftPressed = 0;
+		}
+
+		// RIGHT arrow er jonno
+		if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+		{
+			if (!rightPressed)
+			{
+				rightPressed = 1;
+				currentSelection++;
+
+				if (currentSelection > 2)
+					currentSelection = 0;  
+			}
+		}
+		else
+		{
+			rightPressed = 0;
+		}
+
+		// SHIFT press kora lagbe to confirm selection 
+		if (GetAsyncKeyState(VK_LSHIFT) & 0x8000)
+		{
+			if (!shiftPressed)
+			{
+				shiftPressed = 1;
+
+				selectedCharacterID = currentSelection;
+				scene = 4;
+			}
+		}
+		else
+		{
+			shiftPressed = 0;
+		}
+	}
+
 }
 
 
@@ -313,6 +445,11 @@ int main() {
 	oritri_scene_img = iLoadImage("scene2ori.png");
 	afif_scene_img = iLoadImage("scene2afif.png");
 	samiha_scene_img = iLoadImage("scene2sam.png");
+
+
+	oriID = iLoadImage("oriID.png");
+	afifID = iLoadImage("afifID.png");
+	samID = iLoadImage("samID.png");
 
 	iStart();
 	return 0;
