@@ -1,4 +1,4 @@
-#include "iGraphics.h"
+ï»¿#include "iGraphics.h"
 #include "bitmap_loader.h"
 #include <stdlib.h>
 #include <windows.h>
@@ -35,6 +35,19 @@ int oriID, afifID, samID;
 
 int selectedCharacterID = -1; 
 int currentSelection = 0;    
+
+
+// Scene 5 er jonno global variables
+char *scene5_bg = "Classroom_final.bmp";
+
+int masudSirImg;
+int selectedCharScene5Img;
+
+// Scene 5 control er jonno
+int scene5Step = 0;
+int scene6 = 6;
+
+
 
 
 
@@ -196,7 +209,7 @@ void drawScene2()
 		iFilledRectangle(350, 250, boxW, boxH);
 		iSetColor(255, 255, 255);
 		iText(360, 285, "Afif: Professional procrastinator turned emergency performer. Debugs best under extreme", GLUT_BITMAP_HELVETICA_18);
-		iText(360, 270, "emotional pressure. Secret talent : convincing himself “there’s still time. ", GLUT_BITMAP_HELVETICA_18);
+		iText(360, 270, "emotional pressure. Secret talent : convincing himself â€œthereâ€™s still time. ", GLUT_BITMAP_HELVETICA_18);
 		iSetColor(0, 0, 0);
 		iText(700, 20, "Press SHIFT to continue...", GLUT_BITMAP_HELVETICA_12);
 	}
@@ -294,22 +307,64 @@ void drawScene4() {
 	iText(310, 535, nameText, GLUT_BITMAP_HELVETICA_18);
 
 	iSetColor(0, 0, 0);
-	iText(340, 100, "Press Space to start the game", GLUT_BITMAP_HELVETICA_18);
+	iText(340, 100, "Press Shift to start the game", GLUT_BITMAP_HELVETICA_18);
 }
 
 
+void drawScene5()
+{
+	iShowBMP(0, 0, scene5_bg);
 
+	int charWidth = 200;
+	int charHeight = 350;
+
+	// Left e Selected character thakbe
+	drawPNG(100, 100, charWidth, charHeight, selectedCharScene5Img);
+
+	// Right e Masud Sir
+	drawPNG(500, 100, charWidth, charHeight, masudSirImg);
+
+	// Dialogue box code here
+	iSetColor(0, 0, 0);
+	iFilledRectangle(150, 20, 500, 80);
+	iSetColor(255, 255, 255);
+
+	if (scene5Step == 0)
+		iText(170, 60, "Masud Sir: So you think you are ready for this?", GLUT_BITMAP_HELVETICA_18);
+
+	else if (scene5Step == 1)
+		iText(170, 60, "You: I was born ready, sir.", GLUT_BITMAP_HELVETICA_18);   //change the convo please.
+
+	else if (scene5Step == 2)
+		iText(170, 60, "Masud Sir: We'll see about that.", GLUT_BITMAP_HELVETICA_18);
+
+	else if (scene5Step == 3)
+		iText(170, 60, "Masud Sir: Prepare yourself.", GLUT_BITMAP_HELVETICA_18);
+
+	iText(600, 10, "Press SHIFT to continue", GLUT_BITMAP_HELVETICA_12);
+}
+
+void drawScene6()
+{
+	iClear();
+	iSetColor(255, 255, 255);
+	iText(300, 300, "Scene 6 Starts - Fight Begins!", GLUT_BITMAP_HELVETICA_18);
+}
 
 
 
 
 void iDraw() {
 	iClear();
+
 	if (scene == 1) drawScene1();
 	else if (scene == 2) drawScene2();
 	else if (scene == 3) drawScene3();
 	else if (scene == 4) drawScene4();
+	else if (scene == 5) drawScene5();
+	else if (scene == 6) drawScene6();
 }
+
 
 
 void iMouse(int button, int state, int mx, int my)
@@ -403,7 +458,7 @@ void fixedUpdate()
 		}
 
 		// SHIFT press kora lagbe to confirm selection 
-		if (GetAsyncKeyState(VK_LSHIFT) & 0x8000)
+		if (GetAsyncKeyState(VK_SHIFT) & 0x8000)
 		{
 			if (!shiftPressed)
 			{
@@ -418,6 +473,48 @@ void fixedUpdate()
 			shiftPressed = 0;
 		}
 	}
+
+
+
+	// GLOBAL SHIFT CONTROL (Scene 4 & 5)
+	if (GetAsyncKeyState(VK_LSHIFT) & 0x8000)
+	{
+		if (!shiftPressed)
+		{
+			shiftPressed = 1;
+
+			// Scene 4 to Scene 5
+			if (scene == 4)
+			{
+				if (selectedCharacterID == 0)
+					selectedCharScene5Img = oriID;
+				else if (selectedCharacterID == 1)
+					selectedCharScene5Img = afifID;
+				else
+					selectedCharScene5Img = samID;
+
+				scene5Step = 0;
+				scene = 5;
+			}
+
+			// Scene 5 theke Next dialogue or Scene 6, basically game start hobe after scene 6
+			else if (scene == 5)
+			{
+				scene5Step++;
+
+				if (scene5Step > 3)
+				{
+					scene = 6;
+				}
+			}
+		}
+	}
+	else
+	{
+		shiftPressed = 0;
+	}
+
+
 
 }
 
@@ -450,6 +547,11 @@ int main() {
 	oriID = iLoadImage("oriID.png");
 	afifID = iLoadImage("afifID.png");
 	samID = iLoadImage("samID.png");
+
+
+	masudSirImg = iLoadImage("masudSirnew.png");
+
+
 
 	iStart();
 	return 0;
