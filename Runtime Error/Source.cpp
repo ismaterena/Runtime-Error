@@ -198,6 +198,7 @@ struct Enemy {
 	}
 };
 
+
 struct Player {
 	int x, y, width, height, velocityX, velocityY, gravity, jumpForce;
 	bool isJumping, isMoving, facingRight; int landingTimer;

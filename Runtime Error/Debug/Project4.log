@@ -1,4 +1,4 @@
-﻿Build started 16/02/2026 10:45:29.
+﻿Build started 16/02/2026 11:03:29.
      1>Project "D:\Visual Studio 2013\Projects\RuntimeError\Runtime Error\Project4.vcxproj" on node 2 (Build target(s)).
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(381,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (Level 1.vcxproj, Runtime Error Final.vcxproj, Project4.vcxproj).  This can lead to incorrect clean and rebuild behavior.
      1>ClCompile:
@@ -11,4 +11,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:03.63
+Time Elapsed 00:00:03.41
