@@ -4,9 +4,9 @@
 #include <stdlib.h>
 #include <math.h>
 
-
+// =========================================================
 // GLOBAL MASTER STATE (Pura game er step track korar jonno)
-
+// =========================================================
 enum MasterState { GAME_MENU, GAME_PROLOGUE, GAME_LEVEL1 };
 MasterState masterState = GAME_MENU;
 
@@ -14,9 +14,9 @@ MasterState masterState = GAME_MENU;
 #define SCREEN_WIDTH 1000
 #define SCREEN_HEIGHT 600
 
-
+// =========================================================
 // SHARED UI ENGINE (Shob jaygay eita use hobe)
-
+// =========================================================
 void drawTransparentBox(int x, int y, int w, int h, int alpha) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -43,9 +43,9 @@ void drawDialogueUI(const char* speakerName, const char* line1, const char* line
 	iText(750, 35, "[ SPACE, SHIFT or CLICK ]", GLUT_BITMAP_HELVETICA_12);
 }
 
-
+// =========================================================
 // PART 1: TITLE SCREEN VARIABLES (Cleanser Step)
-
+// =========================================================
 #define P5_RED 211, 47, 47
 #define P5_BLACK 20, 20, 20
 #define P5_CYAN 0, 255, 255
@@ -76,9 +76,9 @@ bool upPressed = false; bool downPressed = false;
 bool leftPressed = false; bool rightPressed = false;
 bool enterPressed = false; bool backspacePressed = false;
 
-
+// =========================================================
 // PART 2: PROLOGUE VARIABLES (Toner Step)
-
+// =========================================================
 int scene = 1;
 int scene1Step = 0; int scene2Step = 0; int scene5Step = 0;
 
@@ -95,8 +95,8 @@ int selectedCharacterID = -1;
 int currentSelection = 0;
 bool shiftPressed = false;
 
-const float SLOT_LEFT = 100.0f; const float SLOT_RIGHT = 450.0f;
-const float OFF_LEFT = -400.0f; const float OFF_RIGHT = 1000.0f;
+const float SLOT_LEFT = 150.0f; const float SLOT_RIGHT = 600.0f;
+const float OFF_LEFT = -400.0f; const float OFF_RIGHT = 1200.0f;
 
 float oriX = OFF_LEFT;   float oriTarget = OFF_LEFT;
 float afifX = OFF_RIGHT; float afifTarget = OFF_RIGHT;
@@ -112,9 +112,9 @@ void drawPNG(float x, float y, int w, int h, int imgID, float brightness = 1.0f)
 	glDisable(GL_BLEND);
 }
 
-
+// =========================================================
 // PART 3: LEVEL 1 VARIABLES (Heavy Moisturizer Step)
-
+// =========================================================
 #define ROOM_WIDTH 2000  
 #define GROUND_LEVEL 100
 #define MAX_PROJECTILES 8
@@ -197,7 +197,6 @@ struct Enemy {
 		for (int i = 0; i < MAX_PROJECTILES; i++) ammo[i].draw();
 	}
 };
-
 
 struct Player {
 	int x, y, width, height, velocityX, velocityY, gravity, jumpForce;
@@ -323,9 +322,9 @@ void resetLevel1() {
 	cameraX = 0; currentState = PRE_BATTLE; dialogueStep = 0;
 }
 
-
+// =========================================================
 // RENDER MODULES (Menu, Prologue, Level 1)
-
+// =========================================================
 void drawGlitchTitle(int x, int y, const char* text) {
 	iSetColor(P5_CYAN); iText(x - glitchOffset, y, (char*)text, GLUT_BITMAP_TIMES_ROMAN_24);
 	iSetColor(P5_RED); iText(x + glitchOffset, y, (char*)text, GLUT_BITMAP_TIMES_ROMAN_24);
@@ -366,7 +365,6 @@ void drawMenuSystem() {
 			iText(70 + jitter + pushX + offset, baseY + 15, menuText[i], GLUT_BITMAP_HELVETICA_18);
 		}
 	}
-
 	else if (currentMenu == SETTINGS_MENU) {
 		drawGlitchTitle(100 + offset, 500, "SYSTEM SETTINGS");
 		char options[3][20] = { "MASTER VOLUME", "BRIGHTNESS", "RETURN" };
@@ -394,34 +392,46 @@ void drawMenuSystem() {
 }
 
 void drawPrologueSystem() {
-	int charHeight = SCREEN_HEIGHT / 2 + 100; int charWidth = charHeight * 0.66; int yPos = 150;
+	// SIZING FIX: Proportional values for 1000x600 screen
+	int charWidth = 220; int charHeight = 380; int yPos = 80;
 
 	if (scene == 1) {
 		iShowBMP(0, 0, scene1_bg);
-		int activeSpeaker = -1; char speaker[50] = ""; char line1[100] = ""; char line2[100] = "";
+		char speaker[50] = ""; char line1[100] = ""; char line2[100] = "";
 
-		if (scene1Step == 0) { oriTarget = SLOT_LEFT; activeSpeaker = 0; strcpy(speaker, "Oritri"); strcpy(line1, "Welcome to AUST! You're now part of the species"); strcpy(line2, "that survives on caffeine, code, and last-minute panic."); }
-		else if (scene1Step == 1) { afifTarget = SLOT_RIGHT; activeSpeaker = 1; strcpy(speaker, "Afif"); strcpy(line1, "Enjoy the fresh air while it lasts."); strcpy(line2, "Soon, the only breeze is your laptop fan overheating."); }
-		else if (scene1Step == 2) { activeSpeaker = 0; strcpy(speaker, "Oritri"); strcpy(line1, "Exactly. You enter as a human and leave as someone"); strcpy(line2, "who gets emotionally offended by missing semicolons."); }
-		else if (scene1Step == 3) { activeSpeaker = 1; strcpy(speaker, "Afif"); strcpy(line1, "Wait until CSE 1205. You'll be dreaming in Java."); strcpy(line2, "And don't even get me started on the lab assignments."); }
-		else if (scene1Step == 4) { activeSpeaker = 0; strcpy(speaker, "Oritri"); strcpy(line1, "Oh, don't scare the newcomer! Though..."); strcpy(line2, "Discrete Math might actually break your spirit a little."); }
-		else if (scene1Step == 5) { afifTarget = OFF_RIGHT; samTarget = SLOT_RIGHT; activeSpeaker = 2; strcpy(speaker, "Samiha"); strcpy(line1, "Did someone say Discrete Math? I already have"); strcpy(line2, "three backup spreadsheets for the syllabus."); }
-		else if (scene1Step == 6) { activeSpeaker = 0; strcpy(speaker, "Oritri"); strcpy(line1, "See? We survive by over-preparing..."); strcpy(line2, "Or completely ignoring reality until the night before."); }
-		else if (scene1Step == 7) { activeSpeaker = 2; strcpy(speaker, "Samiha"); strcpy(line1, "A four-year psychological thriller."); strcpy(line2, "Now, before the semester chooses violence... lock in."); }
+		if (scene1Step == 0) { oriTarget = SLOT_LEFT; strcpy(speaker, "Oritri"); strcpy(line1, "Welcome to AUST! You're now part of the species"); strcpy(line2, "that survives on caffeine, code, and last-minute panic."); }
+		else if (scene1Step == 1) { afifTarget = SLOT_RIGHT; strcpy(speaker, "Afif"); strcpy(line1, "Enjoy the fresh air while it lasts."); strcpy(line2, "Soon, the only breeze is your laptop fan overheating."); }
+		else if (scene1Step == 2) { strcpy(speaker, "Oritri"); strcpy(line1, "Exactly. You enter as a human and leave as someone"); strcpy(line2, "who gets emotionally offended by missing semicolons."); }
+		else if (scene1Step == 3) { strcpy(speaker, "Afif"); strcpy(line1, "Wait until CSE 1205. You'll be dreaming in Java."); strcpy(line2, "And don't even get me started on the lab assignments."); }
+		else if (scene1Step == 4) { strcpy(speaker, "Oritri"); strcpy(line1, "Oh, don't scare the newcomer! Though..."); strcpy(line2, "Discrete Math might actually break your spirit a little."); }
+		else if (scene1Step == 5) { afifTarget = OFF_RIGHT; samTarget = SLOT_RIGHT; strcpy(speaker, "Samiha"); strcpy(line1, "Did someone say Discrete Math? I already have"); strcpy(line2, "three backup spreadsheets for the syllabus."); }
+		else if (scene1Step == 6) { strcpy(speaker, "Oritri"); strcpy(line1, "See? We survive by over-preparing..."); strcpy(line2, "Or completely ignoring reality until the night before."); }
+		else if (scene1Step == 7) { strcpy(speaker, "Samiha"); strcpy(line1, "A four-year psychological thriller."); strcpy(line2, "Now, before the semester chooses violence... lock in."); }
 
-		drawPNG(oriX, yPos, charWidth, charHeight, oritri_talk_img, (activeSpeaker == 0) ? 1.0f : 0.4f);
-		drawPNG(afifX, yPos, charWidth, charHeight, afif_talk_img, (activeSpeaker == 1) ? 1.0f : 0.4f);
-		drawPNG(samX, yPos, charWidth, charHeight, samiha_talk_img, (activeSpeaker == 2) ? 1.0f : 0.4f);
+		// REMOVED POP-UP BLEMISH: Sobai ekhon fully bright thakbe (1.0f)
+		drawPNG(oriX, yPos, charWidth, charHeight, oritri_talk_img, 1.0f);
+		drawPNG(afifX, yPos, charWidth, charHeight, afif_talk_img, 1.0f);
+		drawPNG(samX, yPos, charWidth, charHeight, samiha_talk_img, 1.0f);
 		drawDialogueUI(speaker, line1, line2);
 	}
 	else if (scene == 2) {
 		iShowBMP(0, 0, scene2_bg);
-		int mH = SCREEN_HEIGHT / 1.75; int mW = mH * 0.66; int bH = SCREEN_HEIGHT;
-		if (scene2Step == 0) { drawPNG(100, 0, mW, mH, oritri_scene_img); drawPNG(300, 0, mW, mH, afif_scene_img); drawPNG(500, 0, mW, mH, samiha_scene_img); drawDialogueUI("System", "Welcome to AUST! Let's get to know the team.", ""); }
-		else if (scene2Step == 1) { drawPNG(150, 0, mW, bH, oritri_scene_img); drawDialogueUI("Oritri", "Runs on panic, caffeine, and last minute confidence.", "Believes every bug can be fixed if stared at long enough."); }
-		else if (scene2Step == 2) { drawPNG(150, -50, mW, bH, afif_scene_img); drawDialogueUI("Afif", "Professional procrastinator turned emergency performer.", "Debugs best under extreme emotional pressure."); }
-		else if (scene2Step == 3) { drawPNG(150, -50, mW, bH, samiha_scene_img); drawDialogueUI("Samiha", "Organized to the point where her backup files have backups.", "Finds mistakes faster than teachers find surprise quizzes."); }
-		else if (scene2Step == 4) { drawPNG(100, 0, mW, bH, oritri_scene_img, 1.0f); drawPNG(300, 0, mW, mH, afif_scene_img, 0.4f); drawPNG(500, 0, mW, mH, samiha_scene_img, 0.4f); drawDialogueUI("Oritri", "Before the semester chooses violence...", "You must choose a character."); }
+		// SIZING FIX: Proportional heights and perfectly spaced slots
+		int mW = 220; int mH = 380;
+		int bW = 280; int bH = 480;
+		int pos1 = 120; int pos2 = 390; int pos3 = 660;
+
+		if (scene2Step == 0) { drawPNG(pos1, 50, mW, mH, oritri_scene_img); drawPNG(pos2, 50, mW, mH, afif_scene_img); drawPNG(pos3, 50, mW, mH, samiha_scene_img); drawDialogueUI("System", "Welcome to AUST! Let's get to know the team.", ""); }
+		else if (scene2Step == 1) { drawPNG(360, 20, bW, bH, oritri_scene_img); drawDialogueUI("Oritri", "Runs on panic, caffeine, and last minute confidence.", "Believes every bug can be fixed if stared at long enough."); }
+		else if (scene2Step == 2) { drawPNG(360, 20, bW, bH, afif_scene_img); drawDialogueUI("Afif", "Professional procrastinator turned emergency performer.", "Debugs best under extreme emotional pressure."); }
+		else if (scene2Step == 3) { drawPNG(360, 20, bW, bH, samiha_scene_img); drawDialogueUI("Samiha", "Organized to the point where her backup files have backups.", "Finds mistakes faster than teachers find surprise quizzes."); }
+		else if (scene2Step == 4) {
+			// REMOVED POP-UP BLEMISH: No more weird zooming or dimming!
+			drawPNG(pos1, 50, mW, mH, oritri_scene_img, 1.0f);
+			drawPNG(pos2, 50, mW, mH, afif_scene_img, 1.0f);
+			drawPNG(pos3, 50, mW, mH, samiha_scene_img, 1.0f);
+			drawDialogueUI("Oritri", "Before the semester chooses violence...", "You must choose a character.");
+		}
 	}
 	else if (scene == 3) {
 		iShowBMP(0, 0, scene3_bg);
@@ -441,15 +451,16 @@ void drawPrologueSystem() {
 	}
 	else if (scene == 5) {
 		iShowImage(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, imgClassroom);
-		int activeSpeaker = -1; playerTarget = SLOT_LEFT; masudTarget = SLOT_RIGHT + 200;
+		playerTarget = SLOT_LEFT; masudTarget = SLOT_RIGHT;
 
-		if (scene5Step == 0) { activeSpeaker = 1; drawDialogueUI("Masud Sir", "So, another batch of optimists. Do you even know", "what a Null Pointer Exception is?"); }
-		else if (scene5Step == 1) { activeSpeaker = 0; drawDialogueUI("You", "I've watched three CodeBeauty tutorials.", "I am invincible."); }
-		else if (scene5Step == 2) { activeSpeaker = 1; drawDialogueUI("Masud Sir", "Tutorials won't save you from my midterm.", "Let's see if your reflexes match your confidence."); }
-		else if (scene5Step == 3) { activeSpeaker = 1; drawDialogueUI("Masud Sir", "Prepare yourself.", ""); }
+		if (scene5Step == 0) { drawDialogueUI("Masud Sir", "So, another batch of optimists. Do you even know", "what a Null Pointer Exception is?"); }
+		else if (scene5Step == 1) { drawDialogueUI("You", "I've watched three CodeBeauty tutorials.", "I am invincible."); }
+		else if (scene5Step == 2) { drawDialogueUI("Masud Sir", "Tutorials won't save you from my midterm.", "Let's see if your reflexes match your confidence."); }
+		else if (scene5Step == 3) { drawDialogueUI("Masud Sir", "Prepare yourself.", ""); }
 
-		drawPNG(playerX, 100, 200, 350, selectedCharScene5Img, (activeSpeaker == 0) ? 1.0f : 0.4f);
-		drawPNG(masudX, 100, 200, 350, masudSirImg, (activeSpeaker == 1) ? 1.0f : 0.4f);
+		// REMOVED POP-UP BLEMISH: Constant full visibility for Scene 5
+		drawPNG(playerX, 100, 220, 380, selectedCharScene5Img, 1.0f);
+		drawPNG(masudX, 100, 220, 380, masudSirImg, 1.0f);
 	}
 }
 
@@ -501,7 +512,9 @@ void iDraw() {
 }
 
 
+// =========================================================
 // LOGIC CONTROLLERS (Sob logic ekhane update hoy)
+// =========================================================
 
 bool checkCollision(int px, int py, int pw, int ph, int ex, int ey, int ew, int eh) {
 	int hitX = px + 20; int hitW = pw - 40; int hitY = py; int hitH = ph - 10;
@@ -509,11 +522,7 @@ bool checkCollision(int px, int py, int pw, int ph, int ex, int ey, int ew, int 
 }
 
 // Eita holo amader forward declaration 
-
 void advanceNarrative();
-
-
-
 
 void fixedUpdate() {
 	if (masterState == GAME_MENU) {
@@ -633,15 +642,18 @@ void fixedUpdate() {
 }
 
 
+// =========================================================
 // INPUT HANDLERS (Space, Click, Shift diye text agabe)
+// =========================================================
 void advanceNarrative() {
 	if (masterState == GAME_PROLOGUE) {
 		if (scene == 1) { scene1Step++; if (scene1Step > 7) { scene = 2; scene2Step = 0; } }
 		else if (scene == 2) { scene2Step++; if (scene2Step > 4) scene = 3; }
 		else if (scene == 4) {
-			if (selectedCharacterID == 0) selectedCharScene5Img = oriID;
-			else if (selectedCharacterID == 1) selectedCharScene5Img = afifID;
-			else selectedCharScene5Img = samID;
+			// ID CARD FIX: Ekhon directly character image load hobe for Scene 5!
+			if (selectedCharacterID == 0) selectedCharScene5Img = oritri_scene_img;
+			else if (selectedCharacterID == 1) selectedCharScene5Img = afif_scene_img;
+			else selectedCharScene5Img = samiha_scene_img;
 			scene = 5; scene5Step = 0;
 		}
 		else if (scene == 5) {
@@ -735,8 +747,9 @@ void iSpecialKeyboard(unsigned char key) {
 }
 
 
+// =========================================================
 // MAIN FUNCTION (Shob assets ekbare load korar jonno)
-
+// =========================================================
 int main() {
 	iInitialize(SCREEN_WIDTH, SCREEN_HEIGHT, "RUNTIME ERROR - The Complete Experience");
 
