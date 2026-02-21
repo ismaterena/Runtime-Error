@@ -426,7 +426,7 @@ void drawPrologueSystem() {
 		else if (scene2Step == 2) { drawPNG(360, 20, bW, bH, afif_scene_img); drawDialogueUI("Afif", "Professional procrastinator turned emergency performer.", "Debugs best under extreme emotional pressure."); }
 		else if (scene2Step == 3) { drawPNG(360, 20, bW, bH, samiha_scene_img); drawDialogueUI("Samiha", "Organized to the point where her backup files have backups.", "Finds mistakes faster than teachers find surprise quizzes."); }
 		else if (scene2Step == 4) {
-			// REMOVED POP-UP BLEMISH: No more weird zooming or dimming!
+			// REMOVED POP-UP BLEMISH
 			drawPNG(pos1, 50, mW, mH, oritri_scene_img, 1.0f);
 			drawPNG(pos2, 50, mW, mH, afif_scene_img, 1.0f);
 			drawPNG(pos3, 50, mW, mH, samiha_scene_img, 1.0f);
